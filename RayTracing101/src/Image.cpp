@@ -24,6 +24,11 @@ void Image::Clear(int color)
     }
 }
 
+void Image::SetPixel(int x, int y, int color)
+{
+    m_data[y*m_width + x] = color;
+}
+
 void Image::SetPixel(int x, int y, int r, int g, int b)
 {
     int value = (0xff << 24) | ((r&0xff) << 16) | ((g&0xff) << 8) | (b&0xff);
@@ -33,7 +38,7 @@ void Image::SetPixel(int x, int y, int r, int g, int b)
 
 void Image::SetPixel(int x, int y, float r, float g, float b)
 {
-    int value = (0xff << 24) | (int(r*255.f) << 16) | (int(g * 255.f) << 8) | int(b * 255.f);
+    int value = (0xff << 24) | (int(r*255.99f) << 16) | (int(g * 255.99f) << 8) | int(b * 255.99f);
 
     m_data[y*m_width + x] = value;
 }

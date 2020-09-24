@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="h\Image.h" />
+    <ClInclude Include="h\Math101.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Image.cpp" />

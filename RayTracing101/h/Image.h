@@ -14,6 +14,7 @@ public:
     void Clear(int color = 0);
     int* GetData() { return m_data; }
 
+    void SetPixel(int x, int y, int color); // ARGB
     void SetPixel(int x, int y, int r, int g, int b);
     void SetPixel(int x, int y, float r, float g, float b);
 

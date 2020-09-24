@@ -1,6 +1,16 @@
 #include "h/Image.h"
+#include "h/Math101.h"
+
+void Render();
 
 int main(int argc, char* argv[])
+{
+    Render();   
+
+    return 0;
+}
+
+void Render()
 {
     auto img = new Image(512, 256);
     img->Clear();
@@ -19,6 +29,4 @@ int main(int argc, char* argv[])
     }
 
     img->SaveToBMP("out.bmp");
-
-    return 0;
 }
