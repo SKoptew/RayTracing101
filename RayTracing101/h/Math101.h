@@ -26,7 +26,7 @@ public:
     //-- unary
     vec3_t operator - () const { return vec3_t(-d[0], -d[1], -d[2]); }
 
-    //-- binary
+    //-- binary, modify itself
     vec3_t& operator += (const vec3_t &rhs) { d[0] += rhs.d[0]; d[1] += rhs.d[1]; d[2] += rhs.d[2]; return *this; }
     vec3_t& operator -= (const vec3_t &rhs) { d[0] -= rhs.d[0]; d[1] -= rhs.d[1]; d[2] -= rhs.d[2]; return *this; }
     vec3_t& operator *= (const vec3_t &rhs) { d[0] *= rhs.d[0]; d[1] *= rhs.d[1]; d[2] *= rhs.d[2]; return *this; }
@@ -35,10 +35,11 @@ public:
     vec3_t& operator *= (T a) { d[0] *= a; d[1] *= a; d[2] *= a; return *this; }
     vec3_t& operator /= (T a) { d[0] /= a; d[1] /= a; d[2] /= a; return *this; }
 
-    vec3_t operator + (const vec3_t &rhs) { return vec3_t(d[0] + rhs.d[0], d[1] + rhs.d[1], d[2] + rhs.d[2]); }
-    vec3_t operator - (const vec3_t &rhs) { return vec3_t(d[0] - rhs.d[0], d[1] - rhs.d[1], d[2] - rhs.d[2]); }
-    vec3_t operator * (const vec3_t &rhs) { return vec3_t(d[0] * rhs.d[0], d[1] * rhs.d[1], d[2] * rhs.d[2]); }
-    vec3_t operator / (const vec3_t &rhs) { return vec3_t(d[0] / rhs.d[0], d[1] / rhs.d[1], d[2] / rhs.d[2]); }
+    //-- binary, const
+    vec3_t operator + (const vec3_t &rhs) const { return vec3_t(d[0] + rhs.d[0], d[1] + rhs.d[1], d[2] + rhs.d[2]); }
+    vec3_t operator - (const vec3_t &rhs) const { return vec3_t(d[0] - rhs.d[0], d[1] - rhs.d[1], d[2] - rhs.d[2]); }
+    vec3_t operator * (const vec3_t &rhs) const { return vec3_t(d[0] * rhs.d[0], d[1] * rhs.d[1], d[2] * rhs.d[2]); }
+    vec3_t operator / (const vec3_t &rhs) const { return vec3_t(d[0] / rhs.d[0], d[1] / rhs.d[1], d[2] / rhs.d[2]); }
 
     vec3_t operator * (T a) const { return vec3_t(d[0] * a, d[1] * a, d[2] * a); }
     vec3_t operator / (T a) const { return vec3_t(d[0] / a, d[1] / a, d[2] / a); }
@@ -53,7 +54,7 @@ public:
         return *this;
     }
 
-    vec3_t getNormalized()
+    vec3_t getNormalized() const
     {
         const T k = 1 / sqrt(d[0]*d[0] + d[1]*d[1] + d[2]*d[2]);
         return vec3_t(d[0]*k, d[1]*k, d[2]*k);
@@ -80,20 +81,17 @@ vec3_t<T> cross(const vec3_t<T> &v0, const vec3_t<T> &v1)
                      (v0.d[0]*v1.d[1] - v0.d[1]*v1.d[0]));
 }
 
+template<typename T>
+vec3_t<T> lerp(const vec3_t<T> &v0, const vec3_t<T> &v1, T t)
+{
+    return (1 - t)*v0 + t * v1;
+}
+
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
 
 using real = float;
 using vec3 = vec3_t<real>;
-
-inline int Color(const vec3 &c)
-{
-    const int _r = int(c.r()*255.99f) & 0xff;
-    const int _g = int(c.g()*255.99f) & 0xff;
-    const int _b = int(c.b()*255.99f) & 0xff;
-
-    return (0xff << 24) | (_r << 16) | (_g << 8) | _b;
-}
 
 #endif

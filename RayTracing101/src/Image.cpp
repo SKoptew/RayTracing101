@@ -29,6 +29,15 @@ void Image::SetPixel(int x, int y, int color)
     m_data[y*m_width + x] = color;
 }
 
+void Image::SetPixel(int x, int y, vec3 color)
+{
+    const int _r = int(color.r()*255.99f) & 0xff;
+    const int _g = int(color.g()*255.99f) & 0xff;
+    const int _b = int(color.b()*255.99f) & 0xff;
+
+    m_data[y*m_width + x] = (0xff << 24) | (_r << 16) | (_g << 8) | _b;
+}
+
 void Image::SetPixel(int x, int y, int r, int g, int b)
 {
     int value = (0xff << 24) | ((r&0xff) << 16) | ((g&0xff) << 8) | (b&0xff);

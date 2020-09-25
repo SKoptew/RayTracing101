@@ -1,6 +1,8 @@
 #ifndef __IMAGE_H_INCLUDED
 #define __IMAGE_H_INCLUDED
 
+#include "h/Math101.h"
+
 //-- ARGB, 32-bit
 class Image
 {
@@ -15,6 +17,7 @@ public:
     int* GetData() { return m_data; }
 
     void SetPixel(int x, int y, int color); // ARGB
+    void SetPixel(int x, int y, vec3 color);
     void SetPixel(int x, int y, int r, int g, int b);
     void SetPixel(int x, int y, float r, float g, float b);
 

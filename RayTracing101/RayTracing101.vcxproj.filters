@@ -17,6 +17,9 @@
     <ClInclude Include="h\Math101.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="h\Ray.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Image.cpp">

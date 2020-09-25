@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClInclude Include="h\Image.h" />
     <ClInclude Include="h\Math101.h" />
+    <ClInclude Include="h\Ray.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Image.cpp" />
