@@ -118,10 +118,13 @@
     <ClInclude Include="h\Image.h" />
     <ClInclude Include="h\Math101.h" />
     <ClInclude Include="h\Ray.h" />
+    <ClInclude Include="h\Scene.h" />
+    <ClInclude Include="h\Hitable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Image.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Surface.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

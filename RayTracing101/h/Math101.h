@@ -11,6 +11,7 @@ public:
 
     vec3_t() {}
     vec3_t(T x, T y, T z) { d[0] = x; d[1] = y; d[2] = z; }
+    vec3_t(T xyz)         { d[0] = d[1] = d[2] = xyz; }
 
     const T x() const { return d[0]; }
     const T y() const { return d[1]; }

@@ -14,7 +14,7 @@ struct Ray
           direction(_direction) 
     {}
 
-    vec3 GetPointAt(real t)
+    vec3 GetPointAt(real t) const
     {
         return origin + direction * t;
     }

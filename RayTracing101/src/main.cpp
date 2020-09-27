@@ -1,6 +1,6 @@
 #include "h/Image.h"
-#include "h/Math101.h"
-#include "h/Ray.h"
+#include "h/Scene.h"
+#include <float.h>
 
 void Render();
 
@@ -9,18 +9,6 @@ int main(int argc, char* argv[])
     Render();   
 
     return 0;
-}
-
-bool HitSphere(const vec3 &center, real rad, const Ray &ray)
-{
-    const vec3 oc = ray.origin - center;
-    const real A = dot(ray.direction, ray.direction);
-    const real B = 2*dot(ray.direction, oc);    
-    const real C = dot(oc, oc) - rad*rad;
-
-    const real discr = B*B - 4*A*C;
-
-    return discr > 0;
 }
 
 void Render()
@@ -38,6 +26,13 @@ void Render()
     const vec3 horiz(4, 0, 0);
     const vec3 vert (0, 2, 0);
 
+    //-- scene
+    Scene scene;
+    scene.Add(new Sphere(vec3(0, 0, -1), 0.5));
+    scene.Add(new Sphere(vec3(0, -100.5, -1), 100));
+
+    vec3 color(1, 0, 0);
+
     for (int y = 0; y < h; ++y)
     for (int x = 0; x < w; ++x)
     {
@@ -46,15 +41,18 @@ void Render()
 
         const Ray ray(origin, bl_corner + u*horiz + v*vert);
 
-        vec3 col(1,0,0);
-
-        if (!HitSphere(vec3(0,0,-1), 0.5f, ray))
+        HitRecord hit;        
+        if (scene.Hit(ray, 0, FLT_MAX, hit))
+        {
+            color = hit.nrm * 0.5 + vec3(0.5);
+        }
+        else
         {
             const float t = 0.5f * (ray.direction.getNormalized().y() + 1.f);
-            col = lerp(vec3(1,1,1), vec3(0.5f, 0.7f, 1.f), t);            
+            color = lerp(vec3(1,1,1), vec3(0.5f, 0.7f, 1.f), t);
         }
 
-        img->SetPixel(x, y, col);
+        img->SetPixel(x, y, color);
     }
 
     img->SaveToBMP("out.bmp");
