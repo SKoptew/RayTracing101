@@ -1,6 +1,7 @@
 #ifndef __MATH_101_H_INCLUDED
 #define __MATH_101_H_INCLUDED
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 template<typename T>
@@ -94,5 +95,8 @@ vec3_t<T> lerp(const vec3_t<T> &v0, const vec3_t<T> &v1, T t)
 
 using real = float;
 using vec3 = vec3_t<real>;
+
+#define ToRadians(angleDeg) (angleDeg * real(M_PI/180))
+#define ToDegrees(angleRad) (angleRad * real(180/M_PI))
 
 #endif

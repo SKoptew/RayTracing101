@@ -1,6 +1,6 @@
 #include "h/Image.h"
 #include "h/Scene.h"
-#include <float.h>
+#include "h/Camera.h"
 
 void Render();
 
@@ -20,11 +20,9 @@ void Render()
     int h = img->Height();
     auto data = img->GetData();
 
-    //-- tiny camera model
-    const vec3 origin(0, 0, 0);
-    const vec3 bl_corner(-2, -1, -1);
-    const vec3 horiz(4, 0, 0);
-    const vec3 vert (0, 2, 0);
+    //-- camera
+    Camera camera(real(w) / h);
+    camera.Set(vec3(0, 0, 0), vec3(0, 0, -1), 90);
 
     //-- scene
     Scene scene;
@@ -32,6 +30,7 @@ void Render()
     scene.Add(new Sphere(vec3(0, -100.5, -1), 100));
 
     vec3 color(1, 0, 0);
+    const real clip_far = camera.ClipFar();
 
     for (int y = 0; y < h; ++y)
     for (int x = 0; x < w; ++x)
@@ -39,10 +38,10 @@ void Render()
         const real u = real(x) / w;
         const real v = real(y) / h;
 
-        const Ray ray(origin, bl_corner + u*horiz + v*vert);
+        const auto ray = camera.GetRay(u, v);
 
         HitRecord hit;        
-        if (scene.Hit(ray, 0, FLT_MAX, hit))
+        if (scene.Hit(ray, 0, clip_far, hit))
         {
             color = hit.nrm * 0.5 + vec3(0.5);
         }

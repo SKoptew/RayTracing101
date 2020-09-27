@@ -115,6 +115,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="h\Camera.h" />
     <ClInclude Include="h\Image.h" />
     <ClInclude Include="h\Math101.h" />
     <ClInclude Include="h\Ray.h" />

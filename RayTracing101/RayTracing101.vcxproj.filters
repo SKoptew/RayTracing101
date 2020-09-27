@@ -26,6 +26,9 @@
     <ClInclude Include="h\Hitable.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="h\Camera.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Image.cpp">
