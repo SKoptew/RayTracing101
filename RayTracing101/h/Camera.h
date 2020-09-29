@@ -2,7 +2,6 @@
 #define __CAMERA_H_INCLUDED
 
 #include "Ray.h"
-#include <float.h>
 
 class Camera
 {
