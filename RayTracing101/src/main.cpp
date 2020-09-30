@@ -1,7 +1,6 @@
 #include "h/Image.h"
 #include "h/Scene.h"
 #include "h/Camera.h"
-#include "h/Random101.h"
 
 #include <ctime>
 #include <iostream>
@@ -24,13 +23,13 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-vec3 CalcFragment(const Ray &ray, const Scene &scene, real clip_far)
+vec3 CalcRayColor(const Ray &ray, const Scene &scene, real clip_far)
 {
     HitRecord hit;
 
     if (scene.Hit(ray, 0, clip_far, hit))
     {
-        return hit.nrm * 0.5 + vec3(0.5);
+        return real(0.5) * CalcRayColor(Ray(hit.pt, hit.nrm + RandUnitVector()), scene, clip_far);
     }
     else
     {
@@ -71,11 +70,11 @@ void Render()
             const real u = (x + (Rand01()*real(0.5)-1)) * inv_w;
             const real v = (y + (Rand01()*real(0.5)-1)) * inv_h;
 
-            color += CalcFragment(camera.GetRay(u, v), scene, clip_far);
+            color += CalcRayColor(camera.GetRay(u, v), scene, clip_far);
         }
         color *= SAMPLES_CNT_INV;
 
-        img->SetPixel(x, y, color);
+        img->SetPixel(x, y, LinearToSrgb(color));
     }
 
     img->SaveToBMP("out.bmp");

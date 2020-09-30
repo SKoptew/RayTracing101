@@ -90,4 +90,10 @@ using vec3 = vec3_t<real>;
 #define ToRadians(angleDeg) (angleDeg * real(M_PI/180))
 #define ToDegrees(angleRad) (angleRad * real(180/M_PI))
 
+vec3 LinearToSrgb(const vec3 &c);
+vec3 SrgbToLinear(const vec3 &c);
+
+real Rand01();
+vec3 RandUnitVector();
+
 #endif

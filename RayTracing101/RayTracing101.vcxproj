@@ -124,7 +124,6 @@
     <ClInclude Include="h\Camera.h" />
     <ClInclude Include="h\Image.h" />
     <ClInclude Include="h\Math101.h" />
-    <ClInclude Include="h\Random101.h" />
     <ClInclude Include="h\Ray.h" />
     <ClInclude Include="h\Scene.h" />
     <ClInclude Include="h\Hitable.h" />
@@ -132,7 +131,7 @@
   <ItemGroup>
     <ClCompile Include="src\Image.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Random101.cpp" />
+    <ClCompile Include="src\Math101.cpp" />
     <ClCompile Include="src\Surface.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -29,9 +29,6 @@
     <ClInclude Include="h\Camera.h">
       <Filter>h</Filter>
     </ClInclude>
-    <ClInclude Include="h\Random101.h">
-      <Filter>h</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Image.cpp">
@@ -43,7 +40,7 @@
     <ClCompile Include="src\Surface.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Random101.cpp">
+    <ClCompile Include="src\Math101.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
