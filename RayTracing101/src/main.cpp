@@ -24,6 +24,21 @@ int main(int argc, char* argv[])
     return 0;
 }
 
+vec3 CalcFragment(const Ray &ray, const Scene &scene, real clip_far)
+{
+    HitRecord hit;
+
+    if (scene.Hit(ray, 0, clip_far, hit))
+    {
+        return hit.nrm * 0.5 + vec3(0.5);
+    }
+    else
+    {
+        const float t = 0.5f * (ray.direction.getNormalized().y + 1.f);
+        return lerp(vec3(1, 1, 1), vec3(0.5f, 0.7f, 1.f), t);
+    }
+}
+
 void Render()
 {
     auto img = new Image(512, 256);
@@ -56,18 +71,7 @@ void Render()
             const real u = (x + (Rand01()*real(0.5)-1)) * inv_w;
             const real v = (y + (Rand01()*real(0.5)-1)) * inv_h;
 
-            const auto ray = camera.GetRay(u, v);
-
-            HitRecord hit;        
-            if (scene.Hit(ray, 0, clip_far, hit))
-            {
-                color += hit.nrm * 0.5 + vec3(0.5);
-            }
-            else
-            {
-                const float t = 0.5f * (ray.direction.getNormalized().y() + 1.f);
-                color += lerp(vec3(1,1,1), vec3(0.5f, 0.7f, 1.f), t);
-            }
+            color += CalcFragment(camera.GetRay(u, v), scene, clip_far);
         }
         color *= SAMPLES_CNT_INV;
 

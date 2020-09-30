@@ -4,5 +4,6 @@
 #include "h/Math101.h"
 
 real Rand01();
+vec3 RandUnitVector();
 
 #endif

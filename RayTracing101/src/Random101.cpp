@@ -11,3 +11,17 @@ real Rand01()
     return std::generate_canonical<real, std::numeric_limits<real>::digits>(gen);
 }
 
+vec3 RandUnitVector()
+{
+    //-- rejection sampling
+    vec3 pt;    
+    do
+    {
+        pt.x = Rand01() * 2 - 1;
+        pt.y = Rand01() * 2 - 1;
+        pt.z = Rand01() * 2 - 1;
+    } 
+    while (pt.length2() > 1);
+
+    return pt;
+}
