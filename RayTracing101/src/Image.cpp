@@ -64,6 +64,7 @@ void Image::SaveToBMP(const char* fname)
         bmih.biBitCount    = sizeof(int) * 8;
         bmih.biCompression = BI_RGB;
         bmih.biSizeImage   = m_width * m_height * sizeof(int);
+        bmih.biClrUsed     = 0;
 
         BITMAPFILEHEADER bmfh;
         int  nBitsOffset = sizeof(BITMAPFILEHEADER) + bmih.biSize;

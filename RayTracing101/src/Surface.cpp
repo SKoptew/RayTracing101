@@ -18,6 +18,7 @@ bool Sphere::Hit(const Ray &ray, real t_min, real t_max, HitRecord &hit) const
             hit.t = t;
             hit.pt = ray.GetPointAt(t);
             hit.nrm = (hit.pt - m_center) * m_radiusInv;
+            hit.mat = m_material;
             return true;
         }
 
@@ -29,6 +30,7 @@ bool Sphere::Hit(const Ray &ray, real t_min, real t_max, HitRecord &hit) const
             hit.t = t;
             hit.pt = ray.GetPointAt(t);
             hit.nrm = (hit.pt - m_center) * m_radiusInv;
+            hit.mat = m_material;
             return true;
         }
     }

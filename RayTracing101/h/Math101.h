@@ -13,8 +13,12 @@ public:
     T z;
 
     vec3_t() {}
-    vec3_t(T _x, T _y, T _z) { x = _x; y = _y; z = _z; }
-    vec3_t(T xyz) { x = y = z = xyz; }
+    vec3_t(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
+    explicit vec3_t(T xyz) : x(xyz), y(xyz), z(xyz) {}
+
+    //-- conversions
+    template <typename X, typename Y, typename Z>
+    vec3_t(X _x, Y _y, Z _z) : x((T)_x), y((T)_y), z((T)_z) {}
 
     //-- unary
     vec3_t operator - () const { return vec3_t(-x, -y, -z); }
@@ -92,6 +96,8 @@ using vec3 = vec3_t<real>;
 
 vec3 LinearToSrgb(const vec3 &c);
 vec3 SrgbToLinear(const vec3 &c);
+
+vec3 Reflect(const vec3 &v, const vec3 &normal);
 
 real Rand01();
 vec3 RandUnitVector();
