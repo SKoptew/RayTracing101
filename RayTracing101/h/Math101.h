@@ -102,4 +102,22 @@ vec3 Reflect(const vec3 &v, const vec3 &normal);
 real Rand01();
 vec3 RandUnitVector();
 
+template<typename T>
+T Min(T x, T y)
+{
+    return x < y ? x : y;
+}
+
+template<typename T>
+T Max(T x, T y)
+{
+    return x > y ? x : y;
+}
+
+template<typename T>
+T Clamp01(T x)
+{
+    return x < 0 ? 0 : (x > 1 ? 1 : x);
+}
+
 #endif

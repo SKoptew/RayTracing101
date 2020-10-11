@@ -34,8 +34,6 @@ vec3 CalcRayColor(const Ray &ray, const Scene &scene, real clip_far, int depth)
 
     if (scene.Hit(ray, MIN_HIT_DIST, clip_far, hit))
     {
-        //return real(0.5) * CalcRayColor(Ray(hit.pt, hit.nrm + RandUnitVector()), scene, clip_far);
-
         Ray ray_scattered;
         vec3 attenuation;
 
@@ -43,7 +41,7 @@ vec3 CalcRayColor(const Ray &ray, const Scene &scene, real clip_far, int depth)
         {
             return attenuation * CalcRayColor(ray_scattered, scene, real(FLT_MAX), depth - 1); // reflected ray can hit surface at infinite distance, but first (camera->surface) - only at less to camera.clip_far
         }
-        return vec3(0, 0, 0);
+        return vec3(0);
     }
     else
     {
@@ -72,8 +70,8 @@ void Render()
     //-- materials
     auto mat1 = std::make_shared<Lambertian>(vec3(0.8, 0.3, 0.3));
     auto mat2 = std::make_shared<Lambertian>(vec3(0.8, 0.8, 0.0));
-    auto mat3 = std::make_shared<Metal>     (vec3(0.8, 0.6, 0.2));
-    auto mat4 = std::make_shared<Metal>     (vec3(0.8, 0.8, 0.8));
+    auto mat3 = std::make_shared<Metal>     (vec3(0.8, 0.6, 0.2), 0.f);
+    auto mat4 = std::make_shared<Metal>     (vec3(0.8, 0.8, 0.8), 1.f);
 
     //-- scene
     Scene scene;
