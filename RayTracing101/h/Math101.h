@@ -17,8 +17,11 @@ public:
     explicit vec3_t(T xyz) : x(xyz), y(xyz), z(xyz) {}
 
     //-- conversions
-    template <typename X, typename Y, typename Z>
+    template<typename X, typename Y, typename Z>
     vec3_t(X _x, Y _y, Z _z) : x((T)_x), y((T)_y), z((T)_z) {}
+
+    template<typename X>
+    explicit vec3_t(X xyz) { x = y = z = (T)xyz; }
 
     //-- unary
     vec3_t operator - () const { return vec3_t(-x, -y, -z); }
@@ -56,6 +59,11 @@ public:
         const T k = 1 / sqrt(x*x + y*y + z*z);
         return vec3_t(x*k, y*k, z*k);
     }
+
+    bool isNaN() const
+    {
+        return isnan(x) || isnan(y) || isnan(z);
+    }
 };
 
 template<typename T>
@@ -83,12 +91,11 @@ vec3_t<T> lerp(const vec3_t<T> &v0, const vec3_t<T> &v1, T t)
 {
     return (1 - t)*v0 + t * v1;
 }
-
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
 
-using real = float;
+using real = double;
 using vec3 = vec3_t<real>;
 
 #define ToRadians(angleDeg) (angleDeg * real(M_PI/180))
@@ -97,10 +104,15 @@ using vec3 = vec3_t<real>;
 vec3 LinearToSrgb(const vec3 &c);
 vec3 SrgbToLinear(const vec3 &c);
 
+vec3 Color(int r, int g, int b); // sRGB, to Linear
+
 vec3 Reflect(const vec3 &v, const vec3 &normal);
+vec3 Reflect(const vec3 &v, const vec3 &normal, real VdotN); // faster version
+vec3 Refract(const vec3 &v, const vec3 &n, real VdotN, real n1_n2);
 
 real Rand01();
-vec3 RandUnitVector();
+vec3 RandUnitVector(); // sphere, rad == 1
+vec3 RandUnitVectorInSemisphere(const vec3 &normal);
 
 template<typename T>
 T Min(T x, T y)
@@ -118,6 +130,12 @@ template<typename T>
 T Clamp01(T x)
 {
     return x < 0 ? 0 : (x > 1 ? 1 : x);
+}
+
+template<typename T>
+T Sign(T x)
+{
+    return x < 0 ? -1 : 1;
 }
 
 #endif
