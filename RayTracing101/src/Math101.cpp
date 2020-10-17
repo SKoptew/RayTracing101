@@ -93,7 +93,7 @@ vec3 RandUnitVectorSemisphere(const vec3 &normal)
 void RandUnitVectorDisk(real &u, real&v)
 {
     const real r = sqrt(Rand01());
-    const real a = Rand01() * M_2_PI;
+    const real a = Rand01() * (M_PI*2);
     
     u = r * cos(a);
     v = r * sin(a);
