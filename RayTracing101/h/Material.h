@@ -23,7 +23,7 @@ public:
     bool Scatter(const Ray &ray_in, const HitRecord &hit, vec3 &attenuation, Ray &ray_out) const override
     {
         ray_out.origin = hit.pt;
-        ray_out.direction = RandUnitVectorInSemisphere(hit.nrm);
+        ray_out.direction = RandUnitVectorSemisphere(hit.nrm);
 
         attenuation = m_albedo;
 
@@ -50,7 +50,7 @@ public:
         ray_out.direction = Reflect(ray_in.direction, hit.nrm);
 
         if (m_fuzziness > 0)
-            ray_out.direction = (ray_out.direction + m_fuzziness * RandUnitVectorInSemisphere(hit.nrm)).normalize();
+            ray_out.direction = (ray_out.direction + m_fuzziness * RandUnitVectorSemisphere(hit.nrm)).normalize();
 
         attenuation = m_albedo;
 

@@ -111,8 +111,9 @@ vec3 Reflect(const vec3 &v, const vec3 &normal, real VdotN); // faster version
 vec3 Refract(const vec3 &v, const vec3 &n, real VdotN, real n1_n2);
 
 real Rand01();
-vec3 RandUnitVector(); // sphere, rad == 1
-vec3 RandUnitVectorInSemisphere(const vec3 &normal);
+vec3 RandUnitVectorSphere();
+vec3 RandUnitVectorSemisphere(const vec3 &normal);
+void RandUnitVectorDisk(real &u, real&v);
 
 template<typename T>
 T Min(T x, T y)
@@ -135,7 +136,7 @@ T Clamp01(T x)
 template<typename T>
 T Sign(T x)
 {
-    return x < 0 ? -1 : 1;
+    return x < 0 ? (T)-1 : (T)1;
 }
 
 #endif

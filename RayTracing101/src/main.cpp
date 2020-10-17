@@ -10,10 +10,11 @@
 
 //#define DBG_RENDER_BOUNCES_COUNT
 #define DBG_SHOW_BOUNCES_OVERRUN
+//#define CHECK_NAN
 
 const int  SAMPLES_CNT  = 32;
 const real MIN_HIT_DIST = (real)0.0001;
-const int  MAX_BOUNCES  = 16;
+const int  MAX_BOUNCES  = 32;
 
 void Render();
 
@@ -85,17 +86,20 @@ void Render()
 
     //-- camera
     Camera camera(real(w) / h);
-    camera.Set(vec3(0, 0, 0), vec3(0, 0, -1), 90);
+    //camera.Set(vec3(0, 0, 0), vec3(0, 0, -1), 90);
+
+    const vec3 lookFrom = vec3(3, 3, 2);
+    const vec3 lookAt   = vec3(0, 0, -1);
+    camera.Set(lookFrom, lookAt - lookFrom, 20, (lookAt-lookFrom).length(), 2.0);
 
     //-- materials
     auto mat_ground = std::make_shared<Lambertian>(Color(200, 200, 30));
 
-    auto mat1 = std::make_shared<Lambertian>(Color(204,204,0));
-    auto mat2 = std::make_shared<Lambertian>(Color(200, 200, 200));
+    auto lamb0 = std::make_shared<Lambertian>(Color(60,100,180));
 
     auto metal0 = std::make_shared<Metal>(Color(200, 200, 200), (real)0.0);
-    auto metal1 = std::make_shared<Metal>(Color(200, 50,   50), (real)0.3);
-    auto metal2 = std::make_shared<Metal>(Color(50,  50,  200), (real)0.0);
+    auto metal1 = std::make_shared<Metal>(Color(200,  50,  50), (real)0.3);
+    auto metal2 = std::make_shared<Metal>(Color(50,   50, 200), (real)0.0);
 
     auto refr0 = std::make_shared<Refractive>((real)1.5);
     auto refr1 = std::make_shared<Refractive>((real)1.7);
@@ -104,9 +108,9 @@ void Render()
     Scene scene;
     scene.Add(new Sphere(vec3(0, -100.5, -1), 100, mat_ground.get()));
 
-    scene.Add(new Sphere(vec3( 0, 0.0, -1),  0.5, refr0.get())); // center
-    scene.Add(new Sphere(vec3(-1,   0, -1),  0.5, refr1.get())); // left
-    scene.Add(new Sphere(vec3( 1,   0, -1), -0.5, refr0.get())); // right
+    scene.Add(new Sphere(vec3( 0, 0.0, -1), 0.5, lamb0. get())); // center
+    scene.Add(new Sphere(vec3(-1,   0, -1), 0.5, refr0. get())); // left
+    scene.Add(new Sphere(vec3( 1,   0, -1), 0.5, metal0.get())); // right
         
 
     const real clip_far = camera.ClipFar();
@@ -123,7 +127,9 @@ void Render()
 
             const vec3 sample_color = CalcRayColor(camera.GetRay(u, v), scene, clip_far);
 
+#ifdef CHECK_NAN
             if (!sample_color.isNaN())
+#endif
             {
                 color += sample_color;
                 ++samples_ok;

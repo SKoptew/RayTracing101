@@ -40,7 +40,6 @@ vec3 Reflect(const vec3 &v, const vec3 &n, real VdotN)
 //-- normal directed from medium2 towards medium1
 vec3 Refract(const vec3 &v, const vec3 &n, real VdotN, real n1_n2)
 {
-
     const vec3 vt_tg = n1_n2 * (v - n * VdotN);
     const real discr = 1 - vt_tg.length2();
 
@@ -64,7 +63,7 @@ real Rand01()
     return std::generate_canonical<real, std::numeric_limits<real>::digits>(gen);
 }
 
-vec3 RandUnitVector()
+vec3 RandUnitVectorSphere()
 {
     //-- Marsaglia, George. Choosing a Point from the Surface of a Sphere. Ann. Math. Statist. 43 (1972), no. 2, 645--646
     vec3 pt;
@@ -85,9 +84,17 @@ vec3 RandUnitVector()
     return pt;
 }
 
-vec3 RandUnitVectorInSemisphere(const vec3 &normal)
+vec3 RandUnitVectorSemisphere(const vec3 &normal)
 {
-    vec3 vec = RandUnitVector();
+    vec3 vec = RandUnitVectorSphere();
     return dot(vec, normal) > 0 ? vec : -vec;
 }
 
+void RandUnitVectorDisk(real &u, real&v)
+{
+    const real r = sqrt(Rand01());
+    const real a = Rand01() * M_2_PI;
+    
+    u = r * cos(a);
+    v = r * sin(a);
+}
