@@ -7,7 +7,7 @@
 class Scene : public Hitable
 {
 public:
-    Scene() : Hitable(nullptr) {}
+    Scene() = default;
     ~Scene()
     {
         Clear();

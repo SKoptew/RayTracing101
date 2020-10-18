@@ -111,9 +111,12 @@ vec3 Reflect(const vec3 &v, const vec3 &normal, real VdotN); // faster version
 vec3 Refract(const vec3 &v, const vec3 &n, real VdotN, real n1_n2);
 
 real Rand01();
+real Rand(real min, real max);
 vec3 RandUnitVectorSphere();
 vec3 RandUnitVectorSemisphere(const vec3 &normal);
 void RandUnitVectorDisk(real &u, real&v);
+vec3 RandColor();
+vec3 RandColor(real min, real max);
 
 template<typename T>
 T Min(T x, T y)

@@ -63,6 +63,11 @@ real Rand01()
     return std::generate_canonical<real, std::numeric_limits<real>::digits>(gen);
 }
 
+real Rand(real min, real max)
+{
+    return min + (max - min)*Rand01();
+}
+
 vec3 RandUnitVectorSphere()
 {
     //-- Marsaglia, George. Choosing a Point from the Surface of a Sphere. Ann. Math. Statist. 43 (1972), no. 2, 645--646
@@ -97,4 +102,14 @@ void RandUnitVectorDisk(real &u, real&v)
     
     u = r * cos(a);
     v = r * sin(a);
+}
+
+vec3 RandColor()
+{
+    return vec3(Rand01(), Rand01(), Rand01());
+}
+
+vec3 RandColor(real min, real max)
+{
+    return vec3(min + (max - min)*Rand01(), min + (max - min)*Rand01(), min + (max - min)*Rand01());
 }

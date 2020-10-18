@@ -36,12 +36,17 @@ private:
 
 Ray Camera::GetRay(real u, real v) const
 {
-    real du, dv;
-    RandUnitVectorDisk(du, dv);
+    if (m_aperture05 > 0)
+    {
+        real du, dv;
+        RandUnitVectorDisk(du, dv);
 
-    const vec3 scatter = m_horiz*(du*m_aperture05) + m_vert*(dv*m_aperture05);
+        const vec3 scatter = m_horiz * (du*m_aperture05) + m_vert * (dv*m_aperture05);
 
-    return Ray(m_origin + scatter, (m_UV_bottomLeft + u*m_UV_horiz + v*m_UV_vert - scatter).getNormalized());
+        return Ray(m_origin + scatter, (m_UV_bottomLeft + u * m_UV_horiz + v * m_UV_vert - scatter).getNormalized());
+    }
+
+    return Ray(m_origin, (m_UV_bottomLeft + u * m_UV_horiz + v * m_UV_vert).getNormalized());
 }
 
 void Camera::Set(const vec3 &origin, const vec3 &direction, real fovVertDegree, real focus_distance, real aperture)

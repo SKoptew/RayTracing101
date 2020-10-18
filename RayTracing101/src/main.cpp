@@ -9,14 +9,16 @@
 #include <memory>
 
 //#define DBG_RENDER_BOUNCES_COUNT
-#define DBG_SHOW_BOUNCES_OVERRUN
+//#define DBG_SHOW_BOUNCES_OVERRUN
 //#define CHECK_NAN
 
-const int  SAMPLES_CNT  = 32;
+const int  SAMPLES_CNT  = 128;
 const real MIN_HIT_DIST = (real)0.0001;
 const int  MAX_BOUNCES  = 32;
 
 void Render();
+void CreateStaticScene(Scene &scene);
+void CreateRandomScene(Scene &scene);
 
 int main(int argc, char* argv[])
 {
@@ -84,64 +86,116 @@ void Render()
     const real inv_w = 1 / real(w);
     const real inv_h = 1 / real(h);
 
-    //-- camera
-    Camera camera(real(w) / h);
-    //camera.Set(vec3(0, 0, 0), vec3(0, 0, -1), 90);
+    //-- camera && scene
+    Camera camera(real(w) / h);    
+    Scene scene;
 
-    const vec3 lookFrom = vec3(3, 3, 2);
-    const vec3 lookAt   = vec3(0, 0, -1);
-    camera.Set(lookFrom, lookAt - lookFrom, 20, (lookAt-lookFrom).length(), 2.0);
+    if (0)
+    {
+        CreateStaticScene(scene);
+        camera.Set(vec3(0, 0, 0), vec3(0, 0, -1), 90, 1, 0);
+    }
+    else
+    {
+        CreateRandomScene(scene);
+        const vec3 lookFrom = vec3(13, 2, 3);
+        const vec3 lookAt = vec3(0, 0.5, 0);
+        camera.Set(lookFrom, lookAt - lookFrom, 25, 10.0, 0.08);
+    }
 
+
+    const real clip_far = camera.ClipFar();
+
+    for (int y = 0; y < h; ++y)
+    {
+        for (int x = 0; x < w; ++x)
+        {
+            int samples_ok = 0;
+            vec3 color = { 0,0,0 };
+            for (int sample_num = 0; sample_num < SAMPLES_CNT; ++sample_num)
+            {
+                const real u = (x + (Rand01()*real(0.5)-1)) * inv_w;
+                const real v = (y + (Rand01()*real(0.5)-1)) * inv_h;
+
+                const vec3 sample_color = CalcRayColor(camera.GetRay(u, v), scene, clip_far);
+
+#ifdef CHECK_NAN
+                if (!sample_color.isNaN())
+#endif
+                {
+                    color += sample_color;
+                    ++samples_ok;
+                }
+            }
+            color /= real(samples_ok);
+        
+#ifndef DBG_RENDER_BOUNCES_COUNT
+            color = LinearToSrgb(color);
+#endif
+            img->SetPixel(x, y, color);
+        }
+
+        std::cerr << "\rProcessed: " << y*100 / h << "%..." << std::flush;
+    }
+
+    std::cerr << "\nDone\n";
+
+    img->SaveToBMP("out.bmp");
+}
+
+void CreateStaticScene(Scene &scene)
+{
     //-- materials
-    auto mat_ground = std::make_shared<Lambertian>(Color(200, 200, 30));
-
-    auto lamb0 = std::make_shared<Lambertian>(Color(60,100,180));
+    auto lamb0 = std::make_shared<Lambertian>(Color(60, 100, 180));
 
     auto metal0 = std::make_shared<Metal>(Color(200, 200, 200), (real)0.0);
-    auto metal1 = std::make_shared<Metal>(Color(200,  50,  50), (real)0.3);
-    auto metal2 = std::make_shared<Metal>(Color(50,   50, 200), (real)0.0);
+    auto metal1 = std::make_shared<Metal>(Color(200, 50, 50), (real)0.3);
+    auto metal2 = std::make_shared<Metal>(Color(50, 50, 200), (real)0.0);
 
     auto refr0 = std::make_shared<Refractive>((real)1.5);
     auto refr1 = std::make_shared<Refractive>((real)1.7);
 
     //-- scene
-    Scene scene;
-    scene.Add(new Sphere(vec3(0, -100.5, -1), 100, mat_ground.get()));
+    scene.Add(new Sphere(vec3( 0, -100.5, -1), 100, std::make_shared<Lambertian>(Color(200, 200, 30))));
+    scene.Add(new Sphere(vec3( 0, 0, -1), 0.5, lamb0));  // center ball
+    scene.Add(new Sphere(vec3(-1, 0, -1), 0.5, refr0));  // left   ball
+    scene.Add(new Sphere(vec3( 1, 0, -1), 0.5, metal0)); // right  ball
+}
 
-    scene.Add(new Sphere(vec3( 0, 0.0, -1), 0.5, lamb0. get())); // center
-    scene.Add(new Sphere(vec3(-1,   0, -1), 0.5, refr0. get())); // left
-    scene.Add(new Sphere(vec3( 1,   0, -1), 0.5, metal0.get())); // right
+void CreateRandomScene(Scene &scene)
+{
+    scene.Add(new Sphere(vec3(0, -1000, 0), 1000, std::make_shared<Lambertian>(vec3(0.5, 0.5, 0.5))));
+
+    for (int a = -9; a < 10; ++a)
+    for (int b = -6; b < 6; ++b)
+    {   
+        vec3 center(a + 0.6*Rand01(), 0.2, b + 0.9*Rand01());
         
-
-    const real clip_far = camera.ClipFar();
-
-    for (int y = 0; y < h; ++y)
-    for (int x = 0; x < w; ++x)
-    {
-        int samples_ok = 0;
-        vec3 color = { 0,0,0 };
-        for (int sample_num = 0; sample_num < SAMPLES_CNT; ++sample_num)
+        if ((center - vec3(4, 0.2, 0)).length() > 0.9) // avoid big spheres
         {
-            const real u = (x + (Rand01()*real(0.5)-1)) * inv_w;
-            const real v = (y + (Rand01()*real(0.5)-1)) * inv_h;
-
-            const vec3 sample_color = CalcRayColor(camera.GetRay(u, v), scene, clip_far);
-
-#ifdef CHECK_NAN
-            if (!sample_color.isNaN())
-#endif
+            auto choose_mat = Rand01();
+    
+            if (choose_mat < 0.75) // diffuse
             {
-                color += sample_color;
-                ++samples_ok;
+                auto albedo = RandColor(0.2,1.0)*RandColor(0.2,1.0);
+                scene.Add(new Sphere(center, 0.2, std::make_shared<Lambertian>(albedo)));
+            }
+            else
+            if (choose_mat < 0.9) // metal
+            {
+                auto albedo = RandColor(0.5, 1);
+                auto fuzz = Rand(0, 0.5);
+                scene.Add(new Sphere(center, 0.2, std::make_shared<Metal>(albedo, fuzz)));
+            }
+            else // refractive
+            {
+                auto attenuation = Rand01() > 0.7 ? RandColor(0.6, 0.95) : vec3(0.95);
+                scene.Add(new Sphere(center, 0.2, std::make_shared<Refractive>(1.5, attenuation)));
             }
         }
-        color /= real(samples_ok);
-        
-#ifndef DBG_RENDER_BOUNCES_COUNT
-        color = LinearToSrgb(color);
-#endif
-        img->SetPixel(x, y, color);
     }
 
-    img->SaveToBMP("out.bmp");
+    scene.Add(new Sphere(vec3(0, 1, 0), 1.0, std::make_shared<Refractive>(1.5, vec3(0.95))));
+    scene.Add(new Sphere(vec3(-4, 1, 0), 1.0, std::make_shared<Lambertian>(Color(40,69,123))));
+    scene.Add(new Sphere(vec3(4, 1, 0), 1.0, std::make_shared<Metal>(vec3(0.7, 0.6, 0.5), 0.0)));
 }

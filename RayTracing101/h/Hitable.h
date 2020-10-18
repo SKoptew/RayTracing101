@@ -1,9 +1,11 @@
 #ifndef __SURFACE_H_INCLUDED
 #define __SURFACE_H_INCLUDED
 
+#include <memory>
 #include "h/Ray.h"
 
 class Material;
+using MaterialSptr = std::shared_ptr<Material>;
 
 struct HitRecord
 {
@@ -17,14 +19,7 @@ class Hitable
 {
 public:
     virtual bool Hit(const Ray &ray, real t_min, real t_max, HitRecord &hit) const = 0;
-
-    Hitable(Material* material) : m_material(material)
-    {}
-
     virtual ~Hitable() = default;
-
-protected:
-    Material* m_material;
 };
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
@@ -33,19 +28,20 @@ protected:
 class Sphere : public Hitable
 {
 public:
-    Sphere(const vec3 &center, real radius, Material* mat) 
-        : Hitable(mat),
-          m_center(center), 
+    Sphere(const vec3 &center, real radius, std::shared_ptr<Material> mat)
+        : m_center(center), 
           m_radiusInv(1/radius), 
-          m_radius2(radius*radius) 
+          m_radius2(radius*radius),
+          m_material(mat)
     {}
 
     bool Hit(const Ray &ray, real t_min, real t_max, HitRecord &hit) const override;
 
 private:
-    vec3 m_center;
-    real m_radiusInv;
-    real m_radius2;
+    vec3         m_center;
+    real         m_radiusInv;
+    real         m_radius2;
+    MaterialSptr m_material;
 };
 
 #endif
