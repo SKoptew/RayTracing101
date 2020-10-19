@@ -12,7 +12,7 @@
 //#define DBG_SHOW_BOUNCES_OVERRUN
 //#define CHECK_NAN
 
-const int  SAMPLES_CNT  = 128;
+const int  SAMPLES_CNT  = 256;
 const real MIN_HIT_DIST = (real)0.0001;
 const int  MAX_BOUNCES  = 32;
 
@@ -76,7 +76,7 @@ vec3 CalcRayColor(const Ray &_ray, const Scene &scene, real clip_far)
 
 void Render()
 {
-    auto img = new Image(1024, 576);
+    auto img = new Image(1920, 1200);
     img->Clear();
 
     int w = img->Width();
@@ -100,7 +100,7 @@ void Render()
         CreateRandomScene(scene);
         const vec3 lookFrom = vec3(13, 2, 3);
         const vec3 lookAt = vec3(0, 0.5, 0);
-        camera.Set(lookFrom, lookAt - lookFrom, 25, 10.0, 0.08);
+        camera.Set(lookFrom, lookAt - lookFrom, 20, 10.0, 0.08);
     }
 
 
@@ -167,7 +167,7 @@ void CreateRandomScene(Scene &scene)
     scene.Add(new Sphere(vec3(0, -1000, 0), 1000, std::make_shared<Lambertian>(vec3(0.5, 0.5, 0.5))));
 
     for (int a = -9; a < 10; ++a)
-    for (int b = -6; b < 6; ++b)
+    for (int b = -5; b < 5; ++b)
     {   
         vec3 center(a + 0.6*Rand01(), 0.2, b + 0.9*Rand01());
         
