@@ -4,14 +4,17 @@ bool Sphere::Hit(const Ray &ray, real t_min, real t_max, HitRecord &hit) const
 {
     const vec3 oc = ray.origin - m_center;
     //const real A = dot(ray.direction, ray.direction); // == 1, because of unit length of ray.direction
-    const real B = 2 * dot(ray.direction, oc);
+    //const real B = 2 * dot(ray.direction, oc);
+    const real half_B = dot(ray.direction, oc);
     const real C = dot(oc, oc) - m_radius2;
 
-    const real discr = B*B - 4*C;
+    const real discr = half_B*half_B - C; // 1/4*discriminant
 
     if (discr > 0)
     {
-        real t = (-B - sqrt(discr)) * real(0.5);
+        const real root = sqrt(discr);
+
+        real t = -half_B - root;
 
         if (t > t_min && t < t_max)
         {
@@ -23,7 +26,7 @@ bool Sphere::Hit(const Ray &ray, real t_min, real t_max, HitRecord &hit) const
         }
 
         //-- inner surface of sphere
-        t = (-B + sqrt(discr)) * real(0.5);
+        t = -half_B + root;
 
         if (t > t_min && t < t_max)
         {

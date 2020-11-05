@@ -83,8 +83,8 @@ void Render()
     int h = img->Height();
     auto data = img->GetData();
 
-    const real inv_w = 1 / real(w);
-    const real inv_h = 1 / real(h);
+    const real inv_w = 1 / real(w-1);
+    const real inv_h = 1 / real(h-1);
 
     //-- camera && scene
     Camera camera(real(w) / h);    
@@ -175,13 +175,13 @@ void CreateRandomScene(Scene &scene)
         {
             auto choose_mat = Rand01();
     
-            if (choose_mat < 0.75) // diffuse
+            if (choose_mat < 0.55) // diffuse
             {
                 auto albedo = RandColor(0.2,1.0)*RandColor(0.2,1.0);
                 scene.Add(new Sphere(center, 0.2, std::make_shared<Lambertian>(albedo)));
             }
             else
-            if (choose_mat < 0.9) // metal
+            if (choose_mat < 0.8) // metal
             {
                 auto albedo = RandColor(0.5, 1);
                 auto fuzz = Rand(0, 0.5);
@@ -195,7 +195,7 @@ void CreateRandomScene(Scene &scene)
         }
     }
 
-    scene.Add(new Sphere(vec3(0, 1, 0), 1.0, std::make_shared<Refractive>(1.5, vec3(0.95))));
+    scene.Add(new Sphere(vec3( 0, 1, 0), 1.0, std::make_shared<Refractive>(1.5, vec3(0.95))));
     scene.Add(new Sphere(vec3(-4, 1, 0), 1.0, std::make_shared<Lambertian>(Color(40,69,123))));
-    scene.Add(new Sphere(vec3(4, 1, 0), 1.0, std::make_shared<Metal>(vec3(0.7, 0.6, 0.5), 0.0)));
+    scene.Add(new Sphere(vec3( 4, 1, 0), 1.0, std::make_shared<Metal>(vec3(0.7, 0.6, 0.5), 0.0)));
 }

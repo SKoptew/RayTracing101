@@ -70,6 +70,7 @@ real Rand(real min, real max)
 
 vec3 RandUnitVectorSphere()
 {
+    /*
     //-- Marsaglia, George. Choosing a Point from the Surface of a Sphere. Ann. Math. Statist. 43 (1972), no. 2, 645--646
     vec3 pt;
     do
@@ -86,7 +87,16 @@ vec3 RandUnitVectorSphere()
     pt.y *= m;
     pt.z = 1 - 2*pt.z;
 
-    return pt;
+    return pt.getNormalized();*/
+
+    while (true) 
+    {
+        const vec3 p = vec3(Rand(-1, 1), Rand(-1, 1), Rand(-1, 1));
+        const real length2 = p.length2();
+
+        if (length2 < 1)
+            return p / sqrt(length2);
+    }
 }
 
 vec3 RandUnitVectorSemisphere(const vec3 &normal)
