@@ -131,6 +131,18 @@ T Max(T x, T y)
 }
 
 template<typename T>
+vec3_t<T> Min(const vec3_t<T> &v0, const vec3_t<T> &v1)
+{
+    return vec3_t<T>(Min(v0.x, v1.x), Min(v0.y, v1.y), Min(v0.z, v1.z));
+}
+
+template<typename T>
+vec3_t<T> Max(const vec3_t<T> &v0, const vec3_t<T> &v1)
+{
+    return vec3_t<T>(Max(v0.x, v1.x), Max(v0.y, v1.y), Max(v0.z, v1.z));
+}
+
+template<typename T>
 T Clamp01(T x)
 {
     return x < 0 ? 0 : (x > 1 ? 1 : x);

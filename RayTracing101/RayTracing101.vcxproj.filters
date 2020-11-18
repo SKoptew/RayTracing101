@@ -32,6 +32,12 @@
     <ClInclude Include="h\Material.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="h\AABoundBox.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="h\KDTree.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Image.cpp">
@@ -44,6 +50,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Math101.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KDTree.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

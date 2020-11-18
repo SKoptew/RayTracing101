@@ -40,3 +40,9 @@ bool Sphere::Hit(const Ray &ray, real t_min, real t_max, HitRecord &hit) const
 
     return false;
 }
+
+AABoundBox Sphere::GetAABoundBox() const
+{
+    return AABoundBox(m_center - vec3(m_radius, m_radius, m_radius),
+                      m_center + vec3(m_radius, m_radius, m_radius));
+}

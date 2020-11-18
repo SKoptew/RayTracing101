@@ -121,8 +121,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="h\AABoundBox.h" />
     <ClInclude Include="h\Camera.h" />
     <ClInclude Include="h\Image.h" />
+    <ClInclude Include="h\KDTree.h" />
     <ClInclude Include="h\Material.h" />
     <ClInclude Include="h\Math101.h" />
     <ClInclude Include="h\Ray.h" />
@@ -131,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Image.cpp" />
+    <ClCompile Include="src\KDTree.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math101.cpp" />
     <ClCompile Include="src\Surface.cpp" />

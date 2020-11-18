@@ -2,7 +2,7 @@
 #define __SCENE_H_INCLUDED
 
 #include <vector>
-#include "h/Hitable.h"
+#include "h/KDTree.h"
 
 class Scene : public Hitable
 {
@@ -15,37 +15,49 @@ public:
 
     void Add(Hitable *surface)
     {
-        m_surfaces.push_back(surface);
+        m_surfaces_to_add.push_back(surface);
+    }
+
+    void Finalize()
+    {
+        m_kdtree.reset();
+
+        if (m_surfaces_to_add.size() > 0)
+        {
+            m_kdtree = std::make_unique<KDTree>(m_surfaces_to_add, 0, m_surfaces_to_add.size());
+            m_surfaces_to_add.clear();
+        }
     }
 
     void Clear()
     {
-        for (auto surf : m_surfaces)
-            delete surf;
-        m_surfaces.clear();
+        m_kdtree.reset();
+        m_surfaces_to_add.clear();
     }
 
     bool Hit(const Ray &ray, real t_min, real t_max, HitRecord &rec) const override
     {
-        HitRecord hit;
-        bool hitAnything = false;
-        real t_closest   = t_max;
-
-        for (auto surface : m_surfaces)
+        if (m_kdtree)
         {
-            if (surface->Hit(ray, t_min, t_closest, hit))
-            {
-                hitAnything = true;
-                t_closest = hit.t;
-                rec = hit;
-            }
+            return m_kdtree->Hit(ray, t_min, t_max, rec);
         }
 
-        return hitAnything;
+        return false;
+    }
+
+    AABoundBox GetAABoundBox() const override
+    {
+        if (m_kdtree)
+        {
+            return m_kdtree->GetAABoundBox();
+        }
+
+        return AABoundBox{};
     }
 
 private:
-    std::vector<Hitable*> m_surfaces;
+    std::unique_ptr<KDTree> m_kdtree;
+    std::vector<Hitable*>   m_surfaces_to_add;
 };
 
 #endif

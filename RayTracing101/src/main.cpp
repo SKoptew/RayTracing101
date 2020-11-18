@@ -50,6 +50,7 @@ vec3 CalcRayColor(const Ray &_ray, const Scene &scene, real clip_far)
             {
                 acc_attenuation *= attenuation;
                 ray_in = ray_out;
+                ray_in.inv_direction = vec3(1 / ray_in.direction.x, 1 / ray_in.direction.y, 1 / ray_in.direction.z);
             }
             else
                 return vec3(0); // ray absorbed
@@ -100,8 +101,9 @@ void Render()
         CreateRandomScene(scene);
         const vec3 lookFrom = vec3(13, 2, 3);
         const vec3 lookAt = vec3(0, 0.5, 0);
-        camera.Set(lookFrom, lookAt - lookFrom, 20, 10.0, 0.08);
+        camera.Set(lookFrom, lookAt - lookFrom, 20, 10.0, 0.05);
     }
+    scene.Finalize();
 
 
     const real clip_far = camera.ClipFar();
