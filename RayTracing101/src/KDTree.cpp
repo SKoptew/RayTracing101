@@ -41,7 +41,8 @@ KDTree::KDTree(std::vector<Hitable*> &hitables, size_t start, size_t end)
         case AXIS_Z: std::sort(hitables.begin() + start, hitables.begin() + end, CompareByZ()); break;
         }
 
-        const size_t median = start + count / 2;
+        //const size_t median = start + count / 2;
+        const size_t median = CalcSplitElement(hitables, start, end, m_bbox, m_split_axis);
 
         m_left  = std::make_unique<KDTree>(hitables, start, median);
         m_right = std::make_unique<KDTree>(hitables, median, end);
@@ -151,4 +152,42 @@ KDTree::AXIS KDTree::CalcMaximumDimension(const AABoundBox &bbox) const
     {
         return (bbox_size.y > bbox_size.z) ? KDTree::AXIS_Y : KDTree::AXIS_Z;
     }
+}
+
+inline
+real GetComponent(vec3 v, KDTree::AXIS axis)
+{
+    switch (axis)
+    {
+    case KDTree::AXIS_X: return v.x;
+    case KDTree::AXIS_Y: return v.y;
+    case KDTree::AXIS_Z: return v.z;
+    }
+}
+
+size_t KDTree::CalcSplitElement(const std::vector<Hitable*> &hitables, size_t start, size_t end, const AABoundBox &bbox, AXIS split_axis) const
+{
+    //-- hitables are already sorted by left bound, in range [start, end]
+
+    const size_t count = end - start;
+
+    const real coord_min = GetComponent(bbox.GetMin(), split_axis);
+    const real coord_spread_inv = 1 / GetComponent(bbox.Size(), split_axis);
+
+    real prev_heuristic = FLT_MAX;
+
+    size_t i = start + 1;
+    for (size_t n = 1; i < end; ++i, ++n)
+    {
+        const real coord = (GetComponent(hitables[i]->GetAABoundBox().GetMin(), split_axis) - coord_min) * coord_spread_inv; // 0..1
+        
+        const real heuristic = n*coord + (count - n)*(1 - coord);
+
+        if (heuristic > prev_heuristic)
+            return i - 1;
+
+        prev_heuristic = heuristic;
+    }
+
+    return i-1;
 }
