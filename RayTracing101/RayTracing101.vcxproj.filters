@@ -38,6 +38,9 @@
     <ClInclude Include="h\KDTree.h">
       <Filter>h</Filter>
     </ClInclude>
+    <ClInclude Include="h\Random.h">
+      <Filter>h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Image.cpp">
@@ -53,6 +56,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\KDTree.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Random.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

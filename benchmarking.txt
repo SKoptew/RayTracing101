@@ -1,0 +1,7 @@
+SAMPLES_CNT  = 256;
+MIN_HIT_DIST = (real)0.0001;
+MAX_BOUNCES  = 32;
+1920x1200
+
+625899ms (10min 26s) - K-d tree + median finding heuristic
+425740ms ( 7min  6s) - Squirrel rand function

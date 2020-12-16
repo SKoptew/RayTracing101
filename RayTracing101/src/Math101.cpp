@@ -1,5 +1,5 @@
 #include "h/Math101.h"
-#include <random>
+#include "h/Random.h"
 
 const real GAMMA     = real(2.2);
 const real GAMMA_INV = 1 / GAMMA;
@@ -56,11 +56,9 @@ vec3 Refract(const vec3 &v, const vec3 &n, real VdotN, real n1_n2)
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
 
-static std::mt19937 gen{ std::random_device() () };
-
 real Rand01()
 {
-    return std::generate_canonical<real, std::numeric_limits<real>::digits>(gen);
+    return GetRandom01<real>();
 }
 
 real Rand(real min, real max)

@@ -17,6 +17,7 @@ const real MIN_HIT_DIST = (real)0.0001;
 const int  MAX_BOUNCES  = 32;
 
 void Render();
+void TestRandom();
 void CreateStaticScene(Scene &scene);
 void CreateRandomScene(Scene &scene);
 
@@ -24,6 +25,7 @@ int main(int argc, char* argv[])
 {
     auto c_start = std::clock();
     Render();
+    //TestRandom();
     auto c_end = std::clock();
 
     std::cout << std::fixed << std::setprecision(2) << "CPU time used: "
@@ -138,6 +140,29 @@ void Render()
         }
 
         std::cerr << "\rProcessed: " << y*100 / h << "%..." << std::flush;
+    }
+
+    std::cerr << "\nDone\n";
+
+    img->SaveToBMP("out.bmp");
+}
+
+void TestRandom()
+{
+    auto img = new Image(1920, 1200);
+    img->Clear();
+
+    int w = img->Width();
+    int h = img->Height();
+    auto data = img->GetData();
+
+    for (int y = 0; y < h; ++y)
+    for (int x = 0; x < w; ++x)
+    {
+        //float v = Get1dNoise01(x, y);
+        float v = Rand01();
+
+        img->SetPixel(x, y, vec3(v, v, v));
     }
 
     std::cerr << "\nDone\n";

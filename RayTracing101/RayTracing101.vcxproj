@@ -127,6 +127,7 @@
     <ClInclude Include="h\KDTree.h" />
     <ClInclude Include="h\Material.h" />
     <ClInclude Include="h\Math101.h" />
+    <ClInclude Include="h\Random.h" />
     <ClInclude Include="h\Ray.h" />
     <ClInclude Include="h\Scene.h" />
     <ClInclude Include="h\Hitable.h" />
@@ -136,6 +137,7 @@
     <ClCompile Include="src\KDTree.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Math101.cpp" />
+    <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Surface.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
