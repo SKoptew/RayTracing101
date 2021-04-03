@@ -12,7 +12,7 @@
 //#define DBG_SHOW_BOUNCES_OVERRUN
 //#define CHECK_NAN
 
-const int  SAMPLES_CNT  = 256;
+const int  SAMPLES_CNT  = 256/16;
 const real MIN_HIT_DIST = (real)0.0001;
 const int  MAX_BOUNCES  = 32;
 
@@ -34,32 +34,44 @@ int main(int argc, char* argv[])
     return 0;
 }
 
+vec3 MissShader(const Ray &ray, vec3 attenuation)
+{
+    const real t = 0.5f * (ray.direction.getNormalized().y + 1.f);
+    const vec3 sky_color = lerp(vec3(1, 1, 1), vec3(0.5f, 0.7f, 1.f), t);
+
+    return sky_color * attenuation;
+}
+
 vec3 CalcRayColor(const Ray &_ray, const Scene &scene, real clip_far)
 {
     vec3 acc_attenuation = vec3(1);
 
-    Ray ray_in = _ray;
-    Ray ray_out;
+    Ray ray = _ray;
+    Ray ray_scattered;
     HitRecord hit;
     vec3 attenuation;
 
     int bounce = 0;    
     for (; bounce < MAX_BOUNCES; ++bounce)
     {
-        if (scene.Hit(ray_in, MIN_HIT_DIST, bounce == 0 ? clip_far : real(FLT_MAX), hit))
-        {            
-            if (hit.mat->Scatter(ray_in, hit, attenuation, ray_out))
+        if (scene.Hit(ray, MIN_HIT_DIST, bounce == 0 ? clip_far : real(FLT_MAX), hit))
+        {
+            if (hit.mat->Scatter(ray, hit, attenuation, ray_scattered)) // ray scattered
             {
                 acc_attenuation *= attenuation;
-                ray_in = ray_out;
-                ray_in.inv_direction = vec3(1 / ray_in.direction.x, 1 / ray_in.direction.y, 1 / ray_in.direction.z);
+                ray = ray_scattered;
+                ray.inv_direction = vec3(1 / ray.direction.x, 1 / ray.direction.y, 1 / ray.direction.z);
             }
-            else
-                return vec3(0); // ray absorbed
+            else // ray hit emissive surface or absorbed 
+            {
+                return hit.mat->Emitted(hit.pt) * acc_attenuation;
+            }
         }
         else
             break;
     }
+
+    // ray missed
 
 #ifdef DBG_SHOW_BOUNCES_OVERRUN
     if (bounce == MAX_BOUNCES)
@@ -70,16 +82,13 @@ vec3 CalcRayColor(const Ray &_ray, const Scene &scene, real clip_far)
     return vec3(real(bounce) / MAX_BOUNCES);
 #endif
 
-    //-- imitation of sky color
-    const real t = 0.5f * (ray_in.direction.getNormalized().y + 1.f);
-    const vec3 sky_color = lerp(vec3(1, 1, 1), vec3(0.5f, 0.7f, 1.f), t);
-
-    return acc_attenuation * sky_color;
+    return vec3(0);
+    //return MissShader(ray, acc_attenuation);
 }
 
 void Render()
 {
-    auto img = new Image(1920, 1200);
+    auto img = new Image(1920/2, 1200/2);
     img->Clear();
 
     int w = img->Width();
@@ -93,7 +102,7 @@ void Render()
     Camera camera(real(w) / h);    
     Scene scene;
 
-    if (0)
+    if (1)
     {
         CreateStaticScene(scene);
         camera.Set(vec3(0, 0, 0), vec3(0, 0, -1), 90, 1, 0);
@@ -173,7 +182,10 @@ void TestRandom()
 void CreateStaticScene(Scene &scene)
 {
     //-- materials
+    auto emissive0 = std::make_shared<Emissive>(Color(255,255,255), 4);
+
     auto lamb0 = std::make_shared<Lambertian>(Color(60, 100, 180));
+    auto lamb1 = std::make_shared<Lambertian>(Color(60, 100, 80));
 
     auto metal0 = std::make_shared<Metal>(Color(200, 200, 200), (real)0.0);
     auto metal1 = std::make_shared<Metal>(Color(200, 50, 50), (real)0.3);
@@ -184,9 +196,9 @@ void CreateStaticScene(Scene &scene)
 
     //-- scene
     scene.Add(new Sphere(vec3( 0, -100.5, -1), 100, std::make_shared<Lambertian>(Color(200, 200, 30))));
-    scene.Add(new Sphere(vec3( 0, 0, -1), 0.5, lamb0));  // center ball
-    scene.Add(new Sphere(vec3(-1, 0, -1), 0.5, refr0));  // left   ball
-    scene.Add(new Sphere(vec3( 1, 0, -1), 0.5, metal0)); // right  ball
+    scene.Add(new Sphere(vec3( 0, 0, -1), 0.5, emissive0)); // center ball
+    scene.Add(new Sphere(vec3(-1, 0, -1), 0.5, lamb0));     // left   ball
+    scene.Add(new Sphere(vec3( 1, 0, -1), 0.5, lamb1));     // right  ball
 }
 
 void CreateRandomScene(Scene &scene)

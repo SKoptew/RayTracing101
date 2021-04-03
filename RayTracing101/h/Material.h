@@ -7,6 +7,7 @@ class Material
 {
 public:
     virtual bool Scatter(const Ray &ray_in, const HitRecord &hit, vec3 &attenuation, Ray &ray_out) const = 0;
+    virtual vec3 Emitted(const vec3 &pt) const { return vec3(0, 0, 0); }
     virtual ~Material() = default;
 };
 
@@ -108,6 +109,31 @@ private:
         r0 *= r0;
         return r0 + (1 - r0)*pow(1 - cosine, 5);
     }
+};
+
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
+
+class Emissive : public Material
+{
+public:
+    Emissive(vec3 color, real intensity) : m_color(color), m_intensity(intensity)
+    {}
+
+    bool Scatter(const Ray &ray_in, const HitRecord &hit, vec3 &attenuation, Ray &ray_out) const override
+    {
+        return false;
+    }
+
+    vec3 Emitted(const vec3 &pt) const override
+    { 
+        return m_color * m_intensity;
+    }
+
+private:
+    vec3 m_color;
+    real m_intensity;
 };
 
 #endif
