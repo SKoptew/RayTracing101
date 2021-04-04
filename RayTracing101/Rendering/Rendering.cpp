@@ -105,6 +105,8 @@ vec3 Rendering::CalcRayColor(const Ray &_ray, const Scene &scene, real clip_far)
 
 vec3 Rendering::MissShader(const Ray &ray, vec3 attenuation) const
 {
+    return vec3(0);
+
     const real t = 0.5f * (ray.direction.getNormalized().y + 1.f);
     const vec3 sky_color = lerp(vec3(1, 1, 1), vec3(0.5f, 0.7f, 1.f), t);
 

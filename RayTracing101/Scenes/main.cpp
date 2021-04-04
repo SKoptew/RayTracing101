@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 
 void Render()
 {
-    auto image = new Image(1920/4, 1200/4);
+    auto image = new Image(1920, 1200);
     image->Clear();
 
     //-- camera && scene
@@ -111,22 +111,29 @@ void CreateRandomScene(Scene &scene)
         {
             auto choose_mat = Rand01();
     
-            if (choose_mat < 0.55) // diffuse
+            if (choose_mat < 0.45) // diffuse
             {
                 auto albedo = RandColor(0.2,1.0)*RandColor(0.2,1.0);
                 scene.Add(new Sphere(center, 0.2, std::make_shared<Lambertian>(albedo)));
             }
             else
-            if (choose_mat < 0.8) // metal
+            if (choose_mat < 0.75) // metal
             {
                 auto albedo = RandColor(0.5, 1);
                 auto fuzz = Rand(0, 0.5);
                 scene.Add(new Sphere(center, 0.2, std::make_shared<Metal>(albedo, fuzz)));
             }
-            else // refractive
+            else
+            if (choose_mat < 0.85)  // refractive
             {
                 auto attenuation = Rand01() > 0.7 ? RandColor(0.6, 0.95) : vec3(0.95);
                 scene.Add(new Sphere(center, 0.2, std::make_shared<Refractive>(1.5, attenuation)));
+            }
+            else                   // emissive
+            {
+                auto color = RandColor(0.2, 1.0);
+                auto intensity = Rand(2.5, 5.0);
+                scene.Add(new Sphere(center, 0.2, std::make_shared<Emissive>(color, intensity)));
             }
         }
     }
