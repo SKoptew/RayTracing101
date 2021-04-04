@@ -2,6 +2,7 @@
 #include "Rendering/Material.h"
 
 #include <iostream>
+#include <thread>
 
 //#define DBG_RENDER_BOUNCES_COUNT
 //#define DBG_SHOW_BOUNCES_OVERRUN
@@ -16,16 +17,44 @@ Rendering::Rendering(int samples_count, int max_bounces, real min_hit_distance)
 
 void Rendering::Render(const Scene &scene, const Camera &camera, Image &image) const
 {
-    const int  w     = image.Width();
-    const int  h     = image.Height();
-    const real inv_w = 1 / real(w - 1);
-    const real inv_h = 1 / real(h - 1);
+    RenderRows(scene, camera, image, 0, image.Height());
+    std::cerr << "\nDone\n";
+}
 
-    auto data = image.GetData();
+void Rendering::RenderMT(const Scene &scene, const Camera &camera, Image &image) const
+{
+    const unsigned int numthreads = std::thread::hardware_concurrency();
 
+    const int h = image.Height();    
+    const int block_height = h / numthreads;
+
+    std::vector<std::thread> threads(numthreads-1);
+
+    for (unsigned int i = 0; i < numthreads-1; ++i)
+    {
+        const int start_row = i * block_height;
+        const int end_row   = start_row + block_height;
+
+        threads[i] = std::thread(&Rendering::RenderRows, *this, std::cref(scene), std::cref(camera), std::ref(image), start_row, end_row);
+    }
+
+    RenderRows(scene, camera, image, (numthreads-1) * block_height, h);
+
+    for (auto& entry : threads)
+        entry.join();
+
+    std::cerr << "\nDone in " << numthreads << " threads\n";
+}
+
+void Rendering::RenderRows(const Scene &scene, const Camera &camera, Image &image, int start_row, int end_row) const
+{
+    const int  w        = image.Width();
+    const int  h        = image.Height();
+    const real inv_w    = 1 / real(w - 1);
+    const real inv_h    = 1 / real(h - 1);
     const real clip_far = camera.ClipFar();
 
-    for (int y = 0; y < h; ++y)
+    for (int y = start_row; y < end_row; ++y)
     {
         for (int x = 0; x < w; ++x)
         {
@@ -54,10 +83,9 @@ void Rendering::Render(const Scene &scene, const Camera &camera, Image &image) c
             image.SetPixel(x, y, color);
         }
 
-        std::cerr << "\rProcessed: " << y * 100 / h << "%..." << std::flush;
+        if (end_row == h) // only main thread writes to console
+            std::cerr << "\rProcessed: " << (y- start_row) * 100 / (end_row - start_row) << "%..." << std::flush;
     }
-
-    std::cerr << "\nDone\n";
 }
 
 vec3 Rendering::CalcRayColor(const Ray &_ray, const Scene &scene, real clip_far) const

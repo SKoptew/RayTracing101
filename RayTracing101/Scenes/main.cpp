@@ -48,7 +48,7 @@ void Render()
     scene.Finalize();
 
     Rendering renderer;
-    renderer.Render(scene, camera, *image);
+    renderer.RenderMT(scene, camera, *image);
 
     image->SaveToBMP("out.bmp");
 }

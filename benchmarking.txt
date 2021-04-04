@@ -5,3 +5,4 @@ MAX_BOUNCES  = 32;
 
 625899ms (10min 26s) - K-d tree + median finding heuristic
 425740ms ( 7min  6s) - Squirrel rand function
+164977ms ( 1min 45s) - multi-threaded (4x on my machine) rendering
