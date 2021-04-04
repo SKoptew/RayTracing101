@@ -1,7 +1,7 @@
 #ifndef __MATERIAL_H_INCLUDED
 #define __MATERIAL_H_INCLUDED
 
-#include "h/Hitable.h"
+#include "Geometry/Hitable.h"
 
 class Material
 {

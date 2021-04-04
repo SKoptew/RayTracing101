@@ -1,7 +1,7 @@
 #ifndef __RAY_H_INCLUDED
 #define __RAY_H_INCLUDED
 
-#include "h/Math101.h"
+#include "Utils/Math101.h"
 
 struct Ray
 {

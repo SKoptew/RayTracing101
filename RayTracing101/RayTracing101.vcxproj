@@ -121,24 +121,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="h\AABoundBox.h" />
-    <ClInclude Include="h\Camera.h" />
-    <ClInclude Include="h\Image.h" />
-    <ClInclude Include="h\KDTree.h" />
-    <ClInclude Include="h\Material.h" />
-    <ClInclude Include="h\Math101.h" />
-    <ClInclude Include="h\Random.h" />
-    <ClInclude Include="h\Ray.h" />
-    <ClInclude Include="h\Scene.h" />
-    <ClInclude Include="h\Hitable.h" />
+    <ClInclude Include="BVH\AABoundBox.h" />
+    <ClInclude Include="BVH\KDTree.h" />
+    <ClInclude Include="Geometry\Hitable.h" />
+    <ClInclude Include="Geometry\Scene.h" />
+    <ClInclude Include="Rendering\Camera.h" />
+    <ClInclude Include="Rendering\Material.h" />
+    <ClInclude Include="Rendering\Ray.h" />
+    <ClInclude Include="Rendering\Rendering.h" />
+    <ClInclude Include="Utils\Image.h" />
+    <ClInclude Include="Utils\Math101.h" />
+    <ClInclude Include="Utils\Random.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Image.cpp" />
-    <ClCompile Include="src\KDTree.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Math101.cpp" />
-    <ClCompile Include="src\Random.cpp" />
-    <ClCompile Include="src\Surface.cpp" />
+    <ClCompile Include="BVH\KDTree.cpp" />
+    <ClCompile Include="Geometry\Hitable.cpp" />
+    <ClCompile Include="Rendering\Camera.cpp" />
+    <ClCompile Include="Rendering\Rendering.cpp" />
+    <ClCompile Include="Scenes\main.cpp" />
+    <ClCompile Include="Utils\Image.cpp" />
+    <ClCompile Include="Utils\Math101.cpp" />
+    <ClCompile Include="Utils\Random.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,4 @@
-#include "h/KDTree.h"
+#include "BVH/KDTree.h"
 
 struct CompareByX
 {

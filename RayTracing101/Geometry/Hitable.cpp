@@ -1,4 +1,4 @@
-#include "h/Hitable.h"
+#include "Geometry/Hitable.h"
 
 bool Sphere::Hit(const Ray &ray, real t_min, real t_max, HitRecord &hit) const
 {

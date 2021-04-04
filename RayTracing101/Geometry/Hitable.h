@@ -2,8 +2,8 @@
 #define __SURFACE_H_INCLUDED
 
 #include <memory>
-#include "h/Ray.h"
-#include "AABoundBox.h"
+#include "Rendering/Ray.h"
+#include "BVH/AABoundBox.h"
 
 class Material;
 using MaterialSptr = std::shared_ptr<Material>;

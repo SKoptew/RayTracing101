@@ -1,65 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="h">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{c4163e42-5691-46c4-8512-2ab2245cf3b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="BVH">
+      <UniqueIdentifier>{959780a2-b6da-42bd-9a9a-b7494691ba78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{90abeed6-ca92-4e4b-ad27-58565a1bda5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{51c42171-860b-433d-9cde-12544574c10f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{c61d4e04-af1a-410c-abc8-1c12ac9990d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="h\Image.h">
-      <Filter>h</Filter>
+    <ClInclude Include="Geometry\Hitable.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="h\Math101.h">
-      <Filter>h</Filter>
+    <ClInclude Include="Geometry\Scene.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="h\Ray.h">
-      <Filter>h</Filter>
+    <ClInclude Include="BVH\AABoundBox.h">
+      <Filter>BVH</Filter>
     </ClInclude>
-    <ClInclude Include="h\Scene.h">
-      <Filter>h</Filter>
+    <ClInclude Include="BVH\KDTree.h">
+      <Filter>BVH</Filter>
     </ClInclude>
-    <ClInclude Include="h\Hitable.h">
-      <Filter>h</Filter>
+    <ClInclude Include="Utils\Image.h">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="h\Camera.h">
-      <Filter>h</Filter>
+    <ClInclude Include="Utils\Math101.h">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="h\Material.h">
-      <Filter>h</Filter>
+    <ClInclude Include="Utils\Random.h">
+      <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="h\AABoundBox.h">
-      <Filter>h</Filter>
+    <ClInclude Include="Rendering\Camera.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="h\KDTree.h">
-      <Filter>h</Filter>
+    <ClInclude Include="Rendering\Material.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="h\Random.h">
-      <Filter>h</Filter>
+    <ClInclude Include="Rendering\Ray.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Rendering.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Image.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="Geometry\Hitable.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="BVH\KDTree.cpp">
+      <Filter>BVH</Filter>
     </ClCompile>
-    <ClCompile Include="src\Surface.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="Utils\Image.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Math101.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="Utils\Math101.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\KDTree.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="Utils\Random.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Random.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="Scenes\main.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Rendering.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Camera.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

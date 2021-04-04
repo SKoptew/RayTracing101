@@ -2,8 +2,8 @@
 #define __AA_BOUND_BOX_H_INCLUDED
 
 #include <algorithm>
-#include "Math101.h"
-#include "Ray.h"
+#include "Utils/Math101.h"
+#include "Rendering/Ray.h"
 
 class AABoundBox
 {

@@ -1,7 +1,7 @@
 #ifndef __IMAGE_H_INCLUDED
 #define __IMAGE_H_INCLUDED
 
-#include "h/Math101.h"
+#include "Utils/Math101.h"
 
 //-- ARGB, 32-bit
 class Image

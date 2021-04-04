@@ -1,8 +1,7 @@
 #ifndef __SCENE_H_INCLUDED
 #define __SCENE_H_INCLUDED
 
-#include <vector>
-#include "h/KDTree.h"
+#include "BVH/KDTree.h"
 
 class Scene : public Hitable
 {

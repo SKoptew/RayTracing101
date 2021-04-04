@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "h/Image.h"
+#include "Utils/Image.h"
 #include <stdio.h>
 #include <windows.h>
 

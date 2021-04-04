@@ -1,20 +1,10 @@
-#include "h/Image.h"
-#include "h/Scene.h"
-#include "h/Camera.h"
-#include "h/Material.h"
+#include "Utils/Image.h"
+#include "Rendering/Rendering.h"
+#include "Rendering/Material.h"
 
 #include <ctime>
 #include <iostream>
 #include <iomanip>
-#include <memory>
-
-//#define DBG_RENDER_BOUNCES_COUNT
-//#define DBG_SHOW_BOUNCES_OVERRUN
-//#define CHECK_NAN
-
-const int  SAMPLES_CNT  = 256/16;
-const real MIN_HIT_DIST = (real)0.0001;
-const int  MAX_BOUNCES  = 32;
 
 void Render();
 void TestRandom();
@@ -34,75 +24,16 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-vec3 MissShader(const Ray &ray, vec3 attenuation)
-{
-    const real t = 0.5f * (ray.direction.getNormalized().y + 1.f);
-    const vec3 sky_color = lerp(vec3(1, 1, 1), vec3(0.5f, 0.7f, 1.f), t);
-
-    return sky_color * attenuation;
-}
-
-vec3 CalcRayColor(const Ray &_ray, const Scene &scene, real clip_far)
-{
-    vec3 acc_attenuation = vec3(1);
-
-    Ray ray = _ray;
-    Ray ray_scattered;
-    HitRecord hit;
-    vec3 attenuation;
-
-    int bounce = 0;    
-    for (; bounce < MAX_BOUNCES; ++bounce)
-    {
-        if (scene.Hit(ray, MIN_HIT_DIST, bounce == 0 ? clip_far : real(FLT_MAX), hit))
-        {
-            if (hit.mat->Scatter(ray, hit, attenuation, ray_scattered)) // ray scattered
-            {
-                acc_attenuation *= attenuation;
-                ray = ray_scattered;
-                ray.inv_direction = vec3(1 / ray.direction.x, 1 / ray.direction.y, 1 / ray.direction.z);
-            }
-            else // ray hit emissive surface or absorbed 
-            {
-                return hit.mat->Emitted(hit.pt) * acc_attenuation;
-            }
-        }
-        else
-            break;
-    }
-
-    // ray missed
-
-#ifdef DBG_SHOW_BOUNCES_OVERRUN
-    if (bounce == MAX_BOUNCES)
-        return vec3(1, 0, 1);
-#endif
-
-#ifdef DBG_RENDER_BOUNCES_COUNT
-    return vec3(real(bounce) / MAX_BOUNCES);
-#endif
-
-    return vec3(0);
-    //return MissShader(ray, acc_attenuation);
-}
-
 void Render()
 {
-    auto img = new Image(1920/2, 1200/2);
-    img->Clear();
-
-    int w = img->Width();
-    int h = img->Height();
-    auto data = img->GetData();
-
-    const real inv_w = 1 / real(w-1);
-    const real inv_h = 1 / real(h-1);
+    auto image = new Image(1920/4, 1200/4);
+    image->Clear();
 
     //-- camera && scene
-    Camera camera(real(w) / h);    
+    Camera camera(real(image->Width()) / image->Height());
     Scene scene;
 
-    if (1)
+    if (0)
     {
         CreateStaticScene(scene);
         camera.Set(vec3(0, 0, 0), vec3(0, 0, -1), 90, 1, 0);
@@ -116,44 +47,10 @@ void Render()
     }
     scene.Finalize();
 
+    Rendering renderer;
+    renderer.Render(scene, camera, *image);
 
-    const real clip_far = camera.ClipFar();
-
-    for (int y = 0; y < h; ++y)
-    {
-        for (int x = 0; x < w; ++x)
-        {
-            int samples_ok = 0;
-            vec3 color = { 0,0,0 };
-            for (int sample_num = 0; sample_num < SAMPLES_CNT; ++sample_num)
-            {
-                const real u = (x + (Rand01()*real(0.5)-1)) * inv_w;
-                const real v = (y + (Rand01()*real(0.5)-1)) * inv_h;
-
-                const vec3 sample_color = CalcRayColor(camera.GetRay(u, v), scene, clip_far);
-
-#ifdef CHECK_NAN
-                if (!sample_color.isNaN())
-#endif
-                {
-                    color += sample_color;
-                    ++samples_ok;
-                }
-            }
-            color /= real(samples_ok);
-        
-#ifndef DBG_RENDER_BOUNCES_COUNT
-            color = LinearToSrgb(color);
-#endif
-            img->SetPixel(x, y, color);
-        }
-
-        std::cerr << "\rProcessed: " << y*100 / h << "%..." << std::flush;
-    }
-
-    std::cerr << "\nDone\n";
-
-    img->SaveToBMP("out.bmp");
+    image->SaveToBMP("out.bmp");
 }
 
 void TestRandom()

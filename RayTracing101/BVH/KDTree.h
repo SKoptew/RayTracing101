@@ -2,7 +2,7 @@
 #define __KD_TREE_H_INCLUDED
 
 #include <vector>
-#include "Hitable.h"
+#include "Geometry/Hitable.h"
 
 // bound boxes of adjacent nodes can be overlapped => only leaf nodes contains surfaces
 class KDTree : public Hitable

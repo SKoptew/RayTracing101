@@ -1,5 +1,5 @@
-#include "h/Math101.h"
-#include "h/Random.h"
+#include "Utils/Math101.h"
+#include "Utils/Random.h"
 
 const real GAMMA     = real(2.2);
 const real GAMMA_INV = 1 / GAMMA;
